@@ -26,6 +26,7 @@ public class Passenger {
 
     @ManyToOne
     private Flight flight;
+    private long userId;
 
     public Passenger() {
     }
@@ -46,6 +47,8 @@ public class Passenger {
     public void setPassengerId(long passengerId) {
         this.passengerId = passengerId;
     }
+
+    public long getUserId() { return userId;}
 
     public String getFirstName() {
         return firstName;

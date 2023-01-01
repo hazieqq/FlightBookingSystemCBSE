@@ -1,23 +1,18 @@
 package com.aerotravel.flightticketbooking.controller;
 
-import com.aerotravel.flightticketbooking.model.Aircraft;
-import com.aerotravel.flightticketbooking.model.Airport;
-import com.aerotravel.flightticketbooking.model.Flight;
-import com.aerotravel.flightticketbooking.model.Passenger;
+import com.aerotravel.flightticketbooking.model.*;
 import com.aerotravel.flightticketbooking.services.AircraftService;
 import com.aerotravel.flightticketbooking.services.AirportService;
 import com.aerotravel.flightticketbooking.services.FlightService;
 import com.aerotravel.flightticketbooking.services.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
@@ -249,6 +244,35 @@ public class MainController {
         model.addAttribute("passenger", passenger1);
         return "confirmationPage";
     }
+
+    @GetMapping("/flight/book/myflights")
+    public String showBookedFlight(Model model, @AuthenticationPrincipal User user) {
+        user.getId();
+        long flightId = 39L;
+        long passengerId = 40L;
+        Flight flight = flightService.getFlightById(flightId);
+        if (flight != null) {
+            model.addAttribute("flight", flight);
+            List<Passenger> passengers = flight.getPassengers();
+            Passenger passenger = null;
+            for (Passenger p : passengers) {
+                if (p.getPassengerId() == passengerId) {
+                    passenger = passengerService.getPassengerById(passengerId);
+                    model.addAttribute("passenger", passenger);
+                }
+            }
+            if (passenger != null) {
+                return "myFlights";
+            }else{
+                model.addAttribute("notFound", "Not Found");
+                return "myFlights";
+            }
+        } else {
+            model.addAttribute("notFound", "Not Found");
+            return "myFlights";
+        }
+    }
+
 
     @GetMapping("/flight/book/verify")
     public String showVerifyBookingPage() {
