@@ -247,7 +247,7 @@ public class MainController {
 
     @GetMapping("/flight/book/myflights")
     public String showBookedFlight(Model model, @AuthenticationPrincipal User user) {
-        user.getId();
+//        user.getId();
         long flightId = 39L;
         long passengerId = 40L;
         Flight flight = flightService.getFlightById(flightId);
