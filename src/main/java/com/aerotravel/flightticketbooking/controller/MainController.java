@@ -5,6 +5,7 @@ import com.aerotravel.flightticketbooking.services.AircraftService;
 import com.aerotravel.flightticketbooking.services.AirportService;
 import com.aerotravel.flightticketbooking.services.FlightService;
 import com.aerotravel.flightticketbooking.services.PassengerService;
+import com.google.maps.errors.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -245,11 +248,16 @@ public class MainController {
         return "confirmationPage";
     }
 
+    // ALYA
     @GetMapping("/flight/book/myflights")
     public String showBookedFlight(Model model, @AuthenticationPrincipal User user) {
 //        user.getId();
-        long flightId = 39L;
-        long passengerId = 40L;
+        long flightId = 42L;
+        long passengerId = 43L;
+
+        //get distance, duration, suggestion time
+        DepartureTime departureTime = new DepartureTime();
+
         Flight flight = flightService.getFlightById(flightId);
         if (flight != null) {
             model.addAttribute("flight", flight);
@@ -259,6 +267,37 @@ public class MainController {
                 if (p.getPassengerId() == passengerId) {
                     passenger = passengerService.getPassengerById(passengerId);
                     model.addAttribute("passenger", passenger);
+                    try {
+                        String departureTimeStr = flight.getDepartureDate()+"T"+flight.getDepartureTime()+":00Z";
+                        System.out.println(departureTimeStr);
+                        Instant departuretime = Instant.parse(departureTimeStr);
+
+                        String[] result = departureTime.getDistance(passenger.getAddress(), flight.getDepartureAirport().getAirportName(),  departuretime);
+
+                        //return array distance, duration, leavetime
+
+                        model.addAttribute("distance", result[0]);
+                        model.addAttribute("duration", result[1]);
+                        model.addAttribute("leavetime", result[2]);
+
+//                        String googleMapSrc = "https://www.google.com/maps/embed/v1/directions?origin="
+//                                +passenger.getAddress()
+//                                +"&destination="
+//                                +flight.getDepartureAirport().getAirportName()
+//                                +"&key=AIzaSyDmRKaIKB7miLz_BDES9Nt8zGAnbpXifCo";
+
+//                        String googleMapSrc = "https://www.google.com/maps/embed/v1/directions?origin=9 Jalan 3/2k Seksyen 3&destination=Kuala Lumpur International Airport&key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg";
+//                        model.addAttribute("mapsSrc", googleMapSrc);
+
+                        model.addAttribute("originLocation", passenger.getAddress());
+                        model.addAttribute("destinationLocation", flight.getDepartureAirport().getAirportName());
+                    } catch (ApiException e) {
+                        throw new RuntimeException(e);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
             if (passenger != null) {

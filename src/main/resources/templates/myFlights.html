@@ -9,27 +9,37 @@
     <div class="row">
         <div class="row">
             <div class="col-md-12" style="margin-bottom: 10px">
-                <h1 style="color: darkblue">Verify Booking</h1>
-                <p>In order to verify your ticket please insert your Flight Id and Passenger Id in provided fields.</p>
+                <h1 style="color: darkblue">Your Booked Flight</h1>
             </div>
 
         </div>
     </div>
-    <iframe
-            width="600"
-            height="450"
-            style="border:0"
-            loading="lazy"
-            allowfullscreen
-            referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg
-    &q=Space+Needle,Seattle+WA">
+
+    <iframe width="600" height="450" frameborder="0" style="border:0"
+            th:src="${'https://www.google.com/maps/embed/v1/directions?origin=' + originLocation +'&destination='+ destinationLocation + '&key=AIzaSyDmRKaIKB7miLz_BDES9Nt8zGAnbpXifCo'}" allowfullscreen>
     </iframe>
+
     <div class="row">
-        <div class="col-12" style="margin-bottom: 10px">
-            <p style="color: green; font-weight: bold">Verified Successfully!</p>
-        </div>
-        <hr/>
+
+        <h3>Suggested Leaving Time</h3>
+        <table class="table table-hover">
+            <thead>
+            <tr class="table-active">
+                <th scope="col">Distance</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Leave Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <div>
+                <tr style="background-color: #fdfdfd">
+                    <td th:text="${distance}"></td>
+                    <td th:text="${duration}"></td>
+                    <td th:text="${leavetime}"></td>
+            </div>
+            </tbody>
+        </table>
+
         <h3>Customer Info</h3>
         <table class="table table-hover">
             <thead>
@@ -85,12 +95,6 @@
 
             </tbody>
         </table>
-        <th:block sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_AGENT')">
-            <form method="post" action="/flight/book/cancel">
-                <input type="hidden" th:value="${passenger.passengerId}" name="passengerId">
-                <button type="submit" class="btn btn-sm btn-danger">Cancel This Ticket</button>
-            </form>
-        </th:block>
     </div>
 
 
