@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/master-page}">
+<meta charset="UTF-8">
+<title>Customers</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="row"  style="margin-bottom: 10px">
+        <div class="col-md-6">
+            <h1 style="color: darkblue">All Flights</h1>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr class="table-active">
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Passport Number</th>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Flight Charge</th>
+            <th scope="col">Departure Date</th>
+            <th scope="col">Best leave time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="passenger, iterStat:${passengers}">
+            <tr style="background-color: #fdfdfd">
+                <td th:text="${passenger.firstName}"></td>
+                <td th:text="${passenger.lastName}"></td>
+                <td th:text="${passenger.passportNumber}"></td>
+                <td th:text="${passenger.flight.departureAirport.airportName}"></td>
+                <td th:text="${passenger.flight.destinationAirport.airportName}"></td>
+                <td th:text="${passenger.flight.flightCharge}"></td>
+                <td th:text="${passenger.flight.departureDate}"></td>
+                <td><a type="button" class="btn btn-primary btn-sm"
+                    th:href="@{/flight/book/new(passengerId=${passenger.passengerId}, flightId=${passenger.flight.flightId})}">Go</a></td>
+            </tr>
+        </div>
+        </tbody>
+    </table>
+    <div>
+        <ul class="pagination">
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Pages:</a>
+            </li>
+            <th:block th:each="i:${#numbers.sequence(1,passengers.totalPages)}">
+                <li th:class="${currentPage}==(${i-1}) ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:href="@{/passengers(pageNo=(${i-1}))}" th:text="${i}"></a>
+                </li>
+            </th:block>
+        </ul>
+
+
+    </div>
+</th:block>
+</body>
+</html>
