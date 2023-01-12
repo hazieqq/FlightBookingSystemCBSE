@@ -167,6 +167,14 @@ public class MainController {
         return "flights";
     }
 
+    @GetMapping("/viewFlight")
+    public String viewAllFlight(@RequestParam(defaultValue = "0") int pageNo, Model model) {
+        model.addAttribute("flights", flightService.getAllFlightsPaged(pageNo));
+        model.addAttribute("passengers", passengerService.getAllPassengersPaged(pageNo));
+        model.addAttribute("currentPage", pageNo);
+        return "viewFlight";
+    }
+
     @GetMapping("/flight/search")
     public String showSearchFlightPage(Model model) {
         model.addAttribute("airports", airportService.getAllAirports());
@@ -355,7 +363,7 @@ public class MainController {
         return "flights";
     }
 
-    @GetMapping("passengers")
+    @GetMapping("/passengers")
     public String showPassengerList(@RequestParam long flightId, Model model){
         List<Passenger> passengers = flightService.getFlightById(flightId).getPassengers();
         model.addAttribute("passengers", passengers);
