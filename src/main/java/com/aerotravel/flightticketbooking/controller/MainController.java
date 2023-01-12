@@ -258,10 +258,10 @@ public class MainController {
 
     // ALYA
     @GetMapping("/flight/book/myflights")
-    public String showBookedFlight(Model model, @AuthenticationPrincipal User user) {
+    public String showBookedFlight(@RequestParam long flightId, @RequestParam long passengerId, Model model) {
 //        user.getId();
-        long flightId = 42L;
-        long passengerId = 43L;
+//        long flightId = 42L;
+//        long passengerId = 43L;
 
         //get distance, duration, suggestion time
         DepartureTime departureTime = new DepartureTime();
@@ -287,15 +287,6 @@ public class MainController {
                         model.addAttribute("distance", result[0]);
                         model.addAttribute("duration", result[1]);
                         model.addAttribute("leavetime", result[2]);
-
-//                        String googleMapSrc = "https://www.google.com/maps/embed/v1/directions?origin="
-//                                +passenger.getAddress()
-//                                +"&destination="
-//                                +flight.getDepartureAirport().getAirportName()
-//                                +"&key=AIzaSyDmRKaIKB7miLz_BDES9Nt8zGAnbpXifCo";
-
-//                        String googleMapSrc = "https://www.google.com/maps/embed/v1/directions?origin=9 Jalan 3/2k Seksyen 3&destination=Kuala Lumpur International Airport&key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg";
-//                        model.addAttribute("mapsSrc", googleMapSrc);
 
                         model.addAttribute("originLocation", passenger.getAddress());
                         model.addAttribute("destinationLocation", flight.getDepartureAirport().getAirportName());
@@ -330,7 +321,6 @@ public class MainController {
     public String showVerifyBookingPageResult(@RequestParam("flightId") long flightId,
                                               @RequestParam("passengerId") long passengerId,
                                               Model model) {
-
         Flight flight = flightService.getFlightById(flightId);
         if (flight != null) {
             model.addAttribute("flight", flight);

@@ -37,7 +37,8 @@
                 <td th:text="${passenger.flight.flightCharge}"></td>
                 <td th:text="${passenger.flight.departureDate}"></td>
                 <td><a type="button" class="btn btn-primary btn-sm"
-                    th:href="@{/flight/book/new(passengerId=${passenger.passengerId}, flightId=${passenger.flight.flightId})}">Go</a></td>
+                    th:href="@{/flight/book/myflights(passengerId=${passenger.passengerId}, flightId=${passenger.flight.flightId})}"
+                >Go</a></td>
             </tr>
         </div>
         </tbody>
