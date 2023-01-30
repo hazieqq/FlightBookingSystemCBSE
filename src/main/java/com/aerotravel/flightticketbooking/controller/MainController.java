@@ -285,7 +285,9 @@ public class MainController {
                         //return array distance, duration, leavetime
 
                         model.addAttribute("distance", result[0]);
-                        model.addAttribute("duration", result[1]);
+                        model.addAttribute("durationDrive", result[1]);
+                        model.addAttribute("durationCheckin", "30");
+                        model.addAttribute("durationTotal", Integer.parseInt(result[1]) + 30);
                         model.addAttribute("leavetime", result[2]);
 
                         model.addAttribute("originLocation", passenger.getAddress());
